@@ -350,3 +350,37 @@ footer {
     color: white;
     background-color: var(--headerColor);
 }
+/**
+ * Monitoring
+ */
+
+.monitoringTable {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+.monitoringTable th,
+.monitoringTable td {
+    padding: 10px;
+    border: 1px solid var(--backgroundColor);
+}
+
+.monitoringTable th {
+    background-color: var(--headerColor);
+    color: white;
+}
+
+.monitoringTable th a {
+    text-decoration: underline;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.monitoringTable tbody tr:nth-child(even) {
+    background-color: var(--headerPaleColor);
+}
+
+.monitoringTable .number {
+    text-align: center;
+}

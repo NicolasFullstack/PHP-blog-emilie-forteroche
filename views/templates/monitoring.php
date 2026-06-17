@@ -1,12 +1,27 @@
 <h2>Monitoring du blog</h2>
 
-<table>
+<div style="overflow-x:auto;">
+<table class="monitoringTable">
     <thead>
         <tr>
-            <th>Titre</th>
-            <th>Date de publication</th>
-            <th>Nombre de vues</th>
-            <th>Nombre de commentaires</th>
+            <th>
+                <a href="index.php?action=monitoring&sort=title&order=<?= $nextOrder ?>">Titre<?= $sort === "title" ? ($order === "asc" ? " ↑" : " ↓") : "" ?>
+                </a>
+            </th>
+            <th>
+                <a href="index.php?action=monitoring&sort=date&order=<?= $nextOrder ?>">Date<?= $sort === "date" ? ($order === "asc" ? " ↑" : " ↓") : "" ?>
+                </a>
+            </th>
+
+            <th>
+                <a href="index.php?action=monitoring&sort=views&order=<?= $nextOrder ?>">Vues<?= $sort === "views" ? ($order === "asc" ? " ↑" : " ↓") : "" ?>
+                </a>
+            </th>
+
+            <th>
+                <a href="index.php?action=monitoring&sort=comments&order=<?= $nextOrder ?>">Commentaires<?= $sort === "comments" ? ($order === "asc" ? " ↑" : " ↓") : "" ?>
+                </a>
+            </th>
         </tr>
     </thead>
 
@@ -21,3 +36,4 @@
         <?php } ?>
     </tbody>
 </table>
+</div>

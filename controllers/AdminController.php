@@ -184,22 +184,65 @@ class AdminController
      * Affiche la page de monitoring des articles.
      * @return void
      */
-   public function showMonitoring(): void
-{
-    $this->checkIfUserIsConnected();
+    public function showMonitoring(): void
+    {
+        $this->checkIfUserIsConnected();
 
-    $articleManager = new ArticleManager();
-    $commentManager = new CommentManager();
+        $sort = Utils::request("sort", "title");
+        $order = Utils::request("order", "asc");
+        $allowedSorts = ["title", "date", "views", "comments"];
+        $allowedOrders = ["asc", "desc"];
+        if (!in_array($sort, $allowedSorts)) {
+            $sort = "title";
+        }
 
-    $articles = $articleManager->getAllArticles();
+        if (!in_array($order, $allowedOrders)) {
+            $order = "asc";
+        }
+        $articleManager = new ArticleManager();
+        $commentManager = new CommentManager();
 
-    $monitoringArticles = [];
+        $articles = $articleManager->getAllArticles();
 
-    foreach ($articles as $article) {
-        $monitoringArticles[] = ['article' => $article,'commentsCount' => $commentManager->countCommentsByArticleId($article->getId())];
+        $monitoringArticles = [];
+
+        foreach ($articles as $article) {
+            $monitoringArticles[] = ['article' => $article, 'commentsCount' => $commentManager->countCommentsByArticleId($article->getId())];
+        }
+
+        usort($monitoringArticles, function ($a, $b) use ($sort, $order) {
+            $result = 0;
+
+            if ($sort === "title") {
+                $result = strcmp(
+                    $a['article']->getTitle(),
+                    $b['article']->getTitle()
+                );
+            }
+
+            if ($sort === "date") {
+                $result = $a['article']->getDateCreation() <=> $b['article']->getDateCreation();
+            }
+
+            if ($sort === "views") {
+                $result = $a['article']->getViews() <=> $b['article']->getViews();
+            }
+
+            if ($sort === "comments") {
+                $result = $a['commentsCount'] <=> $b['commentsCount'];
+            }
+
+            return $order === "asc" ? $result : -$result;
+        });
+
+        $nextOrder = $order === "asc" ? "desc" : "asc";
+
+        $view = new View("Monitoring du blog");
+        $view->render("monitoring", [
+            'monitoringArticles' => $monitoringArticles,
+            'sort' => $sort,
+            'order' => $order,
+            'nextOrder' => $nextOrder
+        ]);
     }
-
-    $view = new View("Monitoring du blog");
-    $view->render("monitoring", ['monitoringArticles' => $monitoringArticles]);
-}
 }
