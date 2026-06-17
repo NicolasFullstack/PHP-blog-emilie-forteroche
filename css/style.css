@@ -384,3 +384,11 @@ footer {
 .monitoringTable .number {
     text-align: center;
 }
+.deleteComment {
+    display: inline-block;
+    margin-top: 5px;
+    padding: 3px 8px;
+    font-size: 12px;
+    color: white;
+    background-color: var(--titleColor);
+}

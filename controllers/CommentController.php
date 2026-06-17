@@ -1,12 +1,12 @@
 <?php
 
-class CommentController 
+class CommentController
 {
     /**
      * Ajoute un commentaire.
      * @return void
      */
-    public function addComment() : void
+    public function addComment(): void
     {
         // Récupération des données du formulaire.
         $pseudo = Utils::request("pseudo");
@@ -42,6 +42,30 @@ class CommentController
         }
 
         // On redirige vers la page de l'article.
+        Utils::redirect("showArticle", ['id' => $idArticle]);
+    }
+
+    /**
+     * Supprime un commentaire.
+     * @return void
+     */
+    public function deleteComment(): void
+    {
+        $id = Utils::request("id", -1);
+        $idArticle = Utils::request("idArticle", -1);
+        $commentManager = new CommentManager();
+        $comment = $commentManager->getCommentById($id);
+
+        if (!$comment) {
+            throw new Exception("Le commentaire demandé n'existe pas.");
+        }
+
+        $result = $commentManager->deleteComment($comment);
+
+        if (!$result) {
+            throw new Exception("Une erreur est survenue lors de la suppression du commentaire.");
+        }
+
         Utils::redirect("showArticle", ['id' => $idArticle]);
     }
 }
