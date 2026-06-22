@@ -18,6 +18,7 @@ class ArticleManager extends AbstractEntityManager
         while ($article = $result->fetch()) {
             $articles[] = new Article($article);
         }
+
         return $articles;
     }
 
@@ -30,10 +31,13 @@ class ArticleManager extends AbstractEntityManager
     {
         $sql = "SELECT * FROM article WHERE id = :id";
         $result = $this->db->query($sql, ['id' => $id]);
+
         $article = $result->fetch();
+        
         if ($article) {
             return new Article($article);
         }
+
         return null;
     }
 

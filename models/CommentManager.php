@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Cette classe sert à gérer les commentaires. 
+ * Cette classe sert à gérer les commentaires.
  */
 class CommentManager extends AbstractEntityManager
 {
@@ -14,11 +14,13 @@ class CommentManager extends AbstractEntityManager
     {
         $sql = "SELECT * FROM comment WHERE id_article = :idArticle";
         $result = $this->db->query($sql, ['idArticle' => $idArticle]);
+
         $comments = [];
 
         while ($comment = $result->fetch()) {
             $comments[] = new Comment($comment);
         }
+
         return $comments;
     }
 
@@ -31,10 +33,13 @@ class CommentManager extends AbstractEntityManager
     {
         $sql = "SELECT * FROM comment WHERE id = :id";
         $result = $this->db->query($sql, ['id' => $id]);
+
         $comment = $result->fetch();
+
         if ($comment) {
             return new Comment($comment);
         }
+
         return null;
     }
 
@@ -45,12 +50,15 @@ class CommentManager extends AbstractEntityManager
      */
     public function addComment(Comment $comment): bool
     {
-        $sql = "INSERT INTO comment (pseudo, content, id_article, date_creation) VALUES (:pseudo, :content, :idArticle, NOW())";
+        $sql = "INSERT INTO comment (pseudo, content, id_article, date_creation)
+                VALUES (:pseudo, :content, :idArticle, NOW())";
+
         $result = $this->db->query($sql, [
             'pseudo' => $comment->getPseudo(),
             'content' => $comment->getContent(),
             'idArticle' => $comment->getIdArticle()
         ]);
+
         return $result->rowCount() > 0;
     }
 
@@ -62,7 +70,11 @@ class CommentManager extends AbstractEntityManager
     public function deleteComment(Comment $comment): bool
     {
         $sql = "DELETE FROM comment WHERE id = :id";
-        $result = $this->db->query($sql, ['id' => $comment->getId()]);
+
+        $result = $this->db->query($sql, [
+            'id' => $comment->getId()
+        ]);
+
         return $result->rowCount() > 0;
     }
 
@@ -74,10 +86,12 @@ class CommentManager extends AbstractEntityManager
     public function countCommentsByArticleId(int $idArticle): int
     {
         $sql = "SELECT COUNT(*) AS total
-            FROM comment
-            WHERE id_article = :idArticle";
+                FROM comment
+                WHERE id_article = :idArticle";
 
-        $result = $this->db->query($sql, ['idArticle' => $idArticle]);
+        $result = $this->db->query($sql, [
+            'idArticle' => $idArticle
+        ]);
 
         $row = $result->fetch();
 

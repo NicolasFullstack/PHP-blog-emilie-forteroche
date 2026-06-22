@@ -13,7 +13,7 @@
 
     <div class="footer">
         <span class="info"> Publié le <?= Utils::convertDateToFrenchFormat($article->getDateCreation()) ?></span>
-        <?php if ($article->getDateUpdate() != null) { ?>
+        <?php if ($article->getDateUpdate() !== null) { ?>
             <span class="info"> Modifié le <?= Utils::convertDateToFrenchFormat($article->getDateUpdate()) ?></span>
         <?php } ?>
     </div>
@@ -33,7 +33,7 @@
             echo '      <h3 class="info">Le ' . Utils::convertDateToFrenchFormat($comment->getDateCreation()) . ", " . Utils::format($comment->getPseudo()) . ' a écrit :</h3>';
             echo '      <p class="content">' . Utils::format($comment->getContent()) . '</p>';
             if (isset($_SESSION['user'])) {
-                echo '     <a class="deleteComment" href="index.php?action=deleteComment&id=' . $comment->getId() . '&idArticle=' . $article->getId() . '" ' . Utils::askConfirmation("Êtes-vous sûr de vouloir supprimer ce commentaire ?") . '>Supprimer</a>';
+            echo '      <a class="deleteComment" href="index.php?action=deleteComment&id=' . $comment->getId() . '&idArticle=' . $article->getId() . '" ' . Utils::askConfirmation("Êtes-vous sûr de vouloir supprimer ce commentaire ?") . '>Supprimer</a>';
             }
             echo '  </div>';
             echo '</li>';

@@ -392,3 +392,6 @@ footer {
     color: white;
     background-color: var(--titleColor);
 }
+.monitoringContainer {
+    overflow-x: auto;
+}

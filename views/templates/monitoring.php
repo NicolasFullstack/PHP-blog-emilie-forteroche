@@ -1,6 +1,6 @@
 <h2>Monitoring du blog</h2>
 
-<div style="overflow-x:auto;">
+<div class="monitoringContainer">
 <table class="monitoringTable">
     <thead>
         <tr>

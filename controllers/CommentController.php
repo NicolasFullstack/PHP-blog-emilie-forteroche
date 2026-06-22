@@ -21,6 +21,7 @@ class CommentController
         // On vérifie que l'article existe.
         $articleManager = new ArticleManager();
         $article = $articleManager->getArticleById($idArticle);
+
         if (!$article) {
             throw new Exception("L'article demandé n'existe pas.");
         }
@@ -51,21 +52,28 @@ class CommentController
      */
     public function deleteComment(): void
     {
+        // Récupération des paramètres.
         $id = Utils::request("id", -1);
         $idArticle = Utils::request("idArticle", -1);
+
+        // On récupère le commentaire à supprimer.
         $commentManager = new CommentManager();
         $comment = $commentManager->getCommentById($id);
 
+        // On vérifie que le commentaire existe.
         if (!$comment) {
             throw new Exception("Le commentaire demandé n'existe pas.");
         }
 
+        // On supprime le commentaire.
         $result = $commentManager->deleteComment($comment);
 
+        // On vérifie que la suppression a bien fonctionné.
         if (!$result) {
             throw new Exception("Une erreur est survenue lors de la suppression du commentaire.");
         }
 
+        // On redirige vers la page de l'article.
         Utils::redirect("showArticle", ['id' => $idArticle]);
     }
 }

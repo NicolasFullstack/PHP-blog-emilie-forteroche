@@ -180,69 +180,86 @@ class AdminController
     }
 
 
-    /**
-     * Affiche la page de monitoring des articles.
-     * @return void
-     */
-    public function showMonitoring(): void
-    {
-        $this->checkIfUserIsConnected();
+   /**
+ * Affiche la page de monitoring des articles.
+ * @return void
+ */
+public function showMonitoring(): void
+{
+    // On vérifie que l'utilisateur est connecté.
+    $this->checkIfUserIsConnected();
 
-        $sort = Utils::request("sort", "title");
-        $order = Utils::request("order", "asc");
-        $allowedSorts = ["title", "date", "views", "comments"];
-        $allowedOrders = ["asc", "desc"];
-        if (!in_array($sort, $allowedSorts)) {
-            $sort = "title";
-        }
+    // On récupère les paramètres de tri demandés.
+    $sort = Utils::request("sort", "title");
+    $order = Utils::request("order", "asc");
 
-        if (!in_array($order, $allowedOrders)) {
-            $order = "asc";
-        }
-        $articleManager = new ArticleManager();
-        $commentManager = new CommentManager();
+    // On définit les tris et les ordres autorisés.
+    $allowedSorts = ["title", "date", "views", "comments"];
+    $allowedOrders = ["asc", "desc"];
 
-        $articles = $articleManager->getAllArticles();
-
-        $monitoringArticles = [];
-
-        foreach ($articles as $article) {
-            $monitoringArticles[] = ['article' => $article, 'commentsCount' => $commentManager->countCommentsByArticleId($article->getId())];
-        }
-
-        usort($monitoringArticles, function ($a, $b) use ($sort, $order) {
-            $result = 0;
-
-            if ($sort === "title") {
-                $result = strcmp(
-                    $a['article']->getTitle(),
-                    $b['article']->getTitle()
-                );
-            }
-
-            if ($sort === "date") {
-                $result = $a['article']->getDateCreation() <=> $b['article']->getDateCreation();
-            }
-
-            if ($sort === "views") {
-                $result = $a['article']->getViews() <=> $b['article']->getViews();
-            }
-
-            if ($sort === "comments") {
-                $result = $a['commentsCount'] <=> $b['commentsCount'];
-            }
-
-            return $order === "asc" ? $result : -$result;
-        });
-
-        $nextOrder = $order === "asc" ? "desc" : "asc";
-
-        $view = new View("Monitoring du blog");
-        $view->render("monitoring", [
-            'monitoringArticles' => $monitoringArticles,
-            'sort' => $sort,
-            'order' => $order,
-            'nextOrder' => $nextOrder
-        ]);
+    // Si le tri demandé n'est pas autorisé, on utilise le tri par titre.
+    if (!in_array($sort, $allowedSorts)) {
+        $sort = "title";
     }
+
+    // Si l'ordre demandé n'est pas autorisé, on utilise l'ordre croissant.
+    if (!in_array($order, $allowedOrders)) {
+        $order = "asc";
+    }
+
+    // On récupère les articles et le nombre de commentaires associés.
+    $articleManager = new ArticleManager();
+    $commentManager = new CommentManager();
+
+    $articles = $articleManager->getAllArticles();
+
+    $monitoringArticles = [];
+
+    foreach ($articles as $article) {
+        $monitoringArticles[] = [
+            'article' => $article,
+            'commentsCount' => $commentManager->countCommentsByArticleId($article->getId())
+        ];
+    }
+
+    // On trie les données de monitoring en PHP selon la colonne demandée.
+    usort($monitoringArticles, function ($a, $b) use ($sort, $order) {
+        $result = 0;
+
+        if ($sort === "title") {
+            $result = strcmp(
+                $a['article']->getTitle(),
+                $b['article']->getTitle()
+            );
+        }
+
+        if ($sort === "date") {
+            $result = $a['article']->getDateCreation() <=> $b['article']->getDateCreation();
+        }
+
+        if ($sort === "views") {
+            $result = $a['article']->getViews() <=> $b['article']->getViews();
+        }
+
+        if ($sort === "comments") {
+            $result = $a['commentsCount'] <=> $b['commentsCount'];
+        }
+
+        return $order === "asc" ? $result : -$result;
+    });
+
+    // On inverse l'ordre pour le prochain clic sur une colonne du tableau.
+    $nextOrder = $order === "asc" ? "desc" : "asc";
+
+    // On affiche la page de monitoring.
+    $view = new View("Monitoring du blog");
+    $view->render("monitoring", [
+        'monitoringArticles' => $monitoringArticles,
+        'sort' => $sort,
+        'order' => $order,
+        'nextOrder' => $nextOrder
+    ]);
 }
+
+}   
+

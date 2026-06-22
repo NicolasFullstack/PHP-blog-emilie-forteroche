@@ -8,6 +8,7 @@
 
 <h2>Edition des articles</h2>
 
+<!-- Accès à la page de monitoring -->
 <a class="submit" href="index.php?action=monitoring">Monitoring du blog</a>
 
 <div class="adminArticle">
